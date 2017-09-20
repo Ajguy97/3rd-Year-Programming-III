@@ -1,3 +1,5 @@
+package assignment1_Andre_Godinez;
+
 // Boss class derived from Employee.
 
 //Student Id : 15460718
@@ -24,14 +26,15 @@ public final class Boss extends Employee {
     public void setWeeklySalary(double salary){
         weeklySalary = salary;
     }
-
+    
+    
     // get Boss's pay
     public double earnings() throws EarningsException{
         if(weeklySalary < 0 ){
             throw new EarningsException(
                     toString() + "\n"
                             + "Miscalculated wage:  " + weeklySalary + "\n"
-                            +  "Earnings can't be a negative number.(less than zero)\n");
+                            + "Earnings can't be a negative number.(less than zero)\n");
         }
         else{
         return weeklySalary;

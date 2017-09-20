@@ -1,3 +1,5 @@
+package assignment1_Andre_Godinez;
+
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
 
@@ -20,7 +22,9 @@ public abstract class Employee {
 	private int IDnumber; 
     private String firstName;
     private String lastName;
-
+//	double to store employees monthly payroll
+    private double monthlyPayroll;
+    
 //    this determines whether the employee gets a bonus or not
     private boolean bonus = false;
 
@@ -69,7 +73,6 @@ public abstract class Employee {
 
     public abstract double earnings() throws EarningsException;
 
-
 //    this gets the monthly pay roll of the employee
 //    if the bonus status of this employee is true
 //    then give 200 bonus to monthlypayroll
@@ -80,9 +83,36 @@ public abstract class Employee {
 //        or
 
 //        52 weeks in a year -> annual salary = weekly * 52
-        double annualSalary = earnings()*52;
+//        double annualSalary = earnings()*52;
 //        divide by 12 to get monthly of annual salary
-        double monthly = annualSalary/12;
+//        double monthly = annualSalary/12;
+        
+//    	  or
+//        more accurate
+//    	  getting daily by dividing weekly by 7
+//    	  then getting days of current month
+//    	  then multiplying by daily
+    	
+    	int days = 0;
+    	int month = currentDate.getMonthOfYear();
+    	double daily = earnings()/7;
+    	double monthly = 0;
+    	
+    	
+    	switch (month) {
+    	case 1:case 3:case 5:case 7:case 8:case 10:case 12:
+    		days = 31;
+    		break;
+    	case 4:case 6:case 9:case 11: 
+    		days = 30;
+    		break;
+    	case 2:
+    		days = 28;
+    		break;
+    	}
+    	
+    	monthly = daily*days;
+    	
         if(monthly < 0){
             throw new EarningsException("Monthly Payroll can't be a negative number");
         }
@@ -91,7 +121,8 @@ public abstract class Employee {
             if(bonus){
             monthly+=200;
         }
-        return monthly;
+       monthlyPayroll = monthly;
+       return monthly;
         }
     }
 

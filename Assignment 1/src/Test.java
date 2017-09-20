@@ -1,3 +1,5 @@
+package assignment1_Andre_Godinez;
+
 
 
 import javax.swing.*;
@@ -14,7 +16,6 @@ import java.util.ArrayList;
 public class Test {
 	
 	public static SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-
     // test Employee hierarchy
     public static void main(String args[]) throws EarningsException {
     	DecimalFormat precision2 = new DecimalFormat("0.00");
@@ -49,36 +50,42 @@ public class Test {
         employees.add(commissionWorker);
         employees.add(hourlyWorker);
         
+        
+        
+        String output = "";
+        
         for(Employee emp : employees) {
             int year = emp.calculateMonthsSinceJoined()/12;
             int month = emp.calculateMonthsSinceJoined()%12;
             boolean bonusStatus = emp.bonusStatus();
-            String output = "";
+            
             try {
 //             dividing by 12 to get the amount of years from months
                double weeklyWage = emp.earnings();
 //             Getting the remainder of months/12
                double monthlyPayroll = emp.monthlyPayroll();
+               
                output+= emp.toString()  + "\n"
                         + "Weekly wage : " + precision2.format(weeklyWage) + "\n"
                         + "ID Number : " + emp.getIDnumber() + "\n"
-                        + "Join date  " + emp.getDateJoined() + "\n"
-                        + "Member for " + (year) + " year(s) and " + month + " months" + "\n"
+                        + "Join date :  " + emp.getDateJoined() + "\n"
+                        + "Member for : " + (year) + " year(s) and " + month + " months" + "\n"
                         + "Bonus Status : " + bonusStatus+ "\n"
-                        + "Monthly Payroll : " + precision2.format(monthlyPayroll)+ "\n";
+                        + "Monthly Payroll : " + precision2.format(monthlyPayroll)+ "\n\n\n";
 
-                JOptionPane.showMessageDialog(null, output,
-                                              "Assignment 1",
-                                               JOptionPane.INFORMATION_MESSAGE);
-
+            
             }
             catch(EarningsException e){
                 System.out.println(e.getMessage());
             }
-
+            
 
         }
         
+        
+        JOptionPane.showMessageDialog(null, output,
+                "Assignment 1",
+                 JOptionPane.INFORMATION_MESSAGE);
         
         
 

@@ -1,5 +1,5 @@
 // PieceWorker class derived from Employee
-
+package assignment1_Andre_Godinez;
 //Student Id : 15460718
 //Name : Andre Godinez
 
