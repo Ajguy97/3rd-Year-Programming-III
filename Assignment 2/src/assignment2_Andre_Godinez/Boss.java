@@ -16,7 +16,7 @@ public final class Boss extends Employee {
     }
 
 //     set Boss's salary
-//    public void setWeeklySalary(double salary) {
+//    public void setWeeklySalary(double salary) {S
 //        weeklySalary = (salary > 0 ? salary : 0);
 //    }
 

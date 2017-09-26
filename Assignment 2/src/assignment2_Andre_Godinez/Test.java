@@ -3,6 +3,9 @@ package assignment2_Andre_Godinez;
 
 
 import javax.swing.*;
+
+import org.joda.time.IllegalFieldValueException;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,86 +25,70 @@ public class Test {
     	ArrayList<Employee> employees = new ArrayList<Employee>();
   
     	
-//    	try {
-//            Boss boss = new Boss("John", "Smith",1985,6,30,13,12, 800.0);
-//            employees.add(boss);
-//        	}catch(InvalidDateException e) {
-//        		System.out.println(e.getMessage());
-//        	}catch(IllegalArgumentException e) {
-//        		System.out.println(e.getMessage() + "\n");
-//        	}
-//          
-//        	try {
-//        	PieceWorker pieceWorker =
-//        	new PieceWorker("Bob", "Lewis",2020,8,4,10,23, -10, 200);
-//    		employees.add(pieceWorker);
-//        	}catch(InvalidDateException e) {
-//        		System.out.println(e.getMessage());
-//        	}catch(IllegalArgumentException e) {
-//        		System.out.println(e.getMessage() + "\n");
-//        	}
-//        	
-//        	try {
-//    	    CommissionWorker commissionWorker =
-//            new CommissionWorker(
-//            "Sue", "Jones",1996,2,29,9,35, 400.0, 3.0, 150);
-//            employees.add(commissionWorker);
-//          	}catch(InvalidDateException e) {
-//          		System.out.println(e.getMessage());
-//          	}catch(IllegalArgumentException e) {
-//          		System.out.println(e.getMessage() + "\n");
-//          	}
-//        	
-//        	try {
-//        	HourlyWorker hourlyWorker =
-//        	new HourlyWorker("Karen", "Price",2010,13,9,14,45, 13.75, 40);
-//     	    employees.add(hourlyWorker);
-//         	}catch(InvalidDateException e) {
-//         		System.out.println(e.getMessage());
-//         	}catch(IllegalArgumentException e) {
-//         		System.out.println(e.getMessage() + "\n");
-//         	}
-    	
-    	try {
-            Boss boss = new Boss("John", "Smith",2008,10,27,8,33, 800.0);
+    		try {
+            Boss boss = new Boss("John", "Smith",1985,6,30,13,12, 800.0);
             employees.add(boss);
-        	}catch(InvalidDateException e) {
-        		System.out.println(e.getMessage());
-        	}catch(IllegalArgumentException e) {
-        		System.out.println(e.getMessage() + "\n");
-        	}
+    		}catch(InvalidDateException e) {
+    			System.out.println(e.getMessage());
+    		}
           
         	try {
         	PieceWorker pieceWorker =
-        	new PieceWorker("Bob", "Lewis",2003,1,18,11,14, -10, 200);
+        	new PieceWorker("Bob", "Lewis",2020,8,4,10,23, -10, 200);
     		employees.add(pieceWorker);
         	}catch(InvalidDateException e) {
-        		System.out.println(e.getMessage());
-        	}catch(IllegalArgumentException e) {
-        		System.out.println(e.getMessage() + "\n");
-        	}
+    			System.out.println(e.getMessage());
+    		}
         	
         	try {
     	    CommissionWorker commissionWorker =
             new CommissionWorker(
-            "Sue", "Jones",1999,2,30,16,11, 400.0, 3.0, 150);
+            "Sue", "Jones",1996,2,29,9,35, 400.0, 3.0, 150);
             employees.add(commissionWorker);
-          	}catch(InvalidDateException e) {
-          		System.out.println(e.getMessage());
-          	}catch(IllegalArgumentException e) {
-          		System.out.println(e.getMessage() + "\n");
-          	}
+        	}catch(InvalidDateException e) {
+    			System.out.println(e.getMessage());
+    		}
         	
         	try {
         	HourlyWorker hourlyWorker =
-        	new HourlyWorker("Karen", "Price",2015,7,8,12,37, 13.75, 40);
+        	new HourlyWorker("Karen", "Price",2010,13,9,14,45, 13.75, 40);
      	    employees.add(hourlyWorker);
-         	}catch(InvalidDateException e) {
-         		System.out.println(e.getMessage());
-         	}catch(IllegalArgumentException e) {
-         		System.out.println(e.getMessage() + "\n");
-         	}
-        
+        	}catch(InvalidDateException e) {
+    			System.out.println(e.getMessage());
+    		}
+    	
+//    		try {
+//            Boss boss = new Boss("John", "Smith",2008,10,3,8,33, 800.0);
+//            employees.add(boss);
+//    		}catch(InvalidDateException e) {
+//    			System.out.println(e.getMessage());
+//    		}
+//          
+//        	try {
+//        	PieceWorker pieceWorker =
+//        	new PieceWorker("Bob", "Lewis",2003,1,18,11,14, -10, 200);
+//    		employees.add(pieceWorker);
+//        	}catch(InvalidDateException e) {
+//    			System.out.println(e.getMessage());
+//    		}
+//        	
+//        	try {
+//    	    CommissionWorker commissionWorker =
+//            new CommissionWorker(
+//            "Sue", "Jones",1999,2,30,16,11, 400.0, 3.0, 150);
+//            employees.add(commissionWorker);
+//        	}catch(InvalidDateException e) {
+//    			System.out.println(e.getMessage());
+//    		}
+//        	
+//        	try {
+//        	HourlyWorker hourlyWorker =
+//        	new HourlyWorker("Karen", "Price",2015,7,8,12,37, 13.75, 40);
+//     	    employees.add(hourlyWorker);
+//        	}catch(InvalidDateException e) {
+//    			System.out.println(e.getMessage());
+//    		}
+//        
         
         String output = "";
         

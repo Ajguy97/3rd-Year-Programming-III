@@ -1,11 +1,12 @@
 package assignment2_Andre_Godinez;
 
-import org.joda.time.LocalDate;
+
+import org.joda.time.IllegalFieldValueException;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Months;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.Month;
 import java.util.Date;
 
 // Abstract base class Employee.
@@ -41,13 +42,36 @@ public abstract class Employee {
     
 
     // constructor
-    public Employee(String first, String last,int year,int monthOfYear, int dayOfMonth, int hourOfDay, int minuteOfHour) throws InvalidDateException,IllegalArgumentException{
+    public Employee(String first, String last,int year,int monthOfYear, int dayOfMonth, int hourOfDay, int minuteOfHour) throws InvalidDateException,IllegalFieldValueException{
         firstName = first;
         lastName = last;
         IDnumber = IDno;
 		IDno++;
 		
+		try {
 		joined = new LocalDateTime(year,monthOfYear,dayOfMonth,hourOfDay,minuteOfHour);
+		}catch(IllegalFieldValueException e) {
+//			Doing it this way it catches the Joda time exception and i can print my own message
+//			however the date object still doesn't get instantiated so i have to use the parameters that were passed in
+//			to show the invalid date
+			
+			if(monthOfYear<1||monthOfYear>12) {
+			throw new InvalidDateException(toString()+"'s join date "+monthOfYear+"/"+dayOfMonth+"/" + year+ " "+ hourOfDay
+														+ ":"+ minuteOfHour+" is invalid." + "\n"
+														+ "Reason : month is out of range ");
+			}
+			
+			if(dayOfMonth<1||dayOfMonth>Month.of(monthOfYear).maxLength()) {
+				throw new InvalidDateException(toString()+"'s join date "+monthOfYear+"/"+dayOfMonth+"/" + year+ " "+ hourOfDay
+															+ ":"+ minuteOfHour+" is invalid." + "\n"
+															+ "Reason : day is out of range ");
+				}
+				
+				
+			
+			}
+			
+		
 		
 //		works
 		//if the join date is in the future
@@ -61,19 +85,8 @@ public abstract class Employee {
 			throw new InvalidDateException(toString()+"'s join date " + joined.toString("MM/dd/yyyy HH:mm") + " is invalid" + "\n"
 					+ "Reason : join year is before 1990.\n");
 		}
-//		not working
-//		if month is out of range 
-		if(joined.getMonthOfYear()<1||joined.getMonthOfYear()>12) {
-			throw new InvalidDateException(toString()+"'s join date " + joined.toString("MM/dd/yyyy HH:mm") + " is invalid" + "\n"
-					+ "Reason : month is out of range.\n");
-		}
-//		not working
-//		if day is out of range according to the month 
-		if(joined.getDayOfMonth() < 1 || joined.getDayOfMonth() > joined.dayOfMonth().getMaximumValue()) {
-			throw new InvalidDateException(toString()+"'s join date " + joined.toString("MM/dd/yyyy HH:mm") + " is invalid" + "\n"
-					+ "Reason : day is out of range.\n");
-		}
-//		works.
+		
+//		works
 //		if hour is not between 9:00 and 18:00 
 		if(joined.getHourOfDay() < 9 ||joined.getHourOfDay()>18 ) {
 			throw new InvalidDateException(toString()+"'s join date " + joined.toString("MM/dd/yyyy HH:mm") + " is invalid" + "\n"
@@ -84,6 +97,22 @@ public abstract class Employee {
 		if(joined.dayOfWeek().getAsText() == "Saturday" || joined.dayOfWeek().getAsText() == "Sunday") {
 			throw new InvalidDateException(toString()+"'s join date " + joined.toString("MM/dd/yyyy HH:mm") + " is invalid" + "\n"
 					+ "Reason : join day falls on the weekend ("+ joined.dayOfWeek().getAsText() +").\n");
+//		These wont actually work because the date object never gets instantiated
+		
+////		if month is out of range 
+//		if(joined.getMonthOfYear()<1||joined.getMonthOfYear()>12) {
+//			throw new InvalidDateException(toString()+"'s join date " + joined.toString("MM/dd/yyyy HH:mm") + " is invalid" + "\n"
+//					+ "Reason : month is out of range.\n");
+//		}
+
+////		if day is out of range according to the month 
+//		if(joined.getDayOfMonth() < 1 || joined.getDayOfMonth() > joined.dayOfMonth().getMaximumValue()) {
+//			throw new InvalidDateException(toString()+"'s join date " + joined.toString("MM/dd/yyyy HH:mm") + " is invalid" + "\n"
+//					+ "Reason : day is out of range.\n");
+//		}
+		
+		
+
 		}
     }
 
