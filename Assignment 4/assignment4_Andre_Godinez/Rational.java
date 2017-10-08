@@ -55,19 +55,18 @@ public class Rational {
 		return new Rational((a.top - b.top),b.bottom);
 	}
 	
-	public Rational lowestForm(Rational r1) {
-		BigInteger gcd = (BigInteger.valueOf(r1.top)).gcd(BigInteger.valueOf(r1.bottom));
+	public Rational lowestForm() {
+		BigInteger gcd = (BigInteger.valueOf(top)).gcd(BigInteger.valueOf(bottom));
 		//already in lowest form
 		if(gcd.intValue() == 1) {
 //			return original rational number
-			return r1;
+			return this;
 		}
-		return new Rational(r1.top/gcd.intValue(),r1.bottom/gcd.intValue());
+		return new Rational(top/gcd.intValue(),bottom/gcd.intValue());
 	}
 	
 	public String toString() {
-		Rational r = lowestForm(new Rational(this.top,this.bottom));
-		return  r.top+"/"+r.bottom+ " = "+String.format("%.2f",(double)top/bottom);
+		return  lowestForm().top+"/"+lowestForm().bottom+ " = "+String.format("%.2f",(double)top/bottom);
 	}
 	
 	public static void main(String args[]) {
@@ -77,7 +76,7 @@ public class Rational {
 		Rational r3 = new Rational((int)Ball.POOL.getDiameter(),(int)Ball.SOFTBALL.getDiameter());
 		Rational r4 = new Rational((int)Ball.TENNIS.getDiameter(),(int)Ball.VOLLEYBALL.getDiameter());
 		
-		System.out.println(r.toString());
+		System.out.println(r.top+"/"+r.bottom+" = "+ r.toString());
 		System.out.println(plus(r1,r2).toString());
 		System.out.println(minus(r2,r3).toString());
 		System.out.println(multiply(r3,r4).toString());
