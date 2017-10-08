@@ -1,3 +1,5 @@
+//Andre Godinez
+//15460718
 package assignment4_Andre_Godinez;
 import java.math.BigInteger;
 
@@ -22,36 +24,26 @@ public class Rational {
 //	a/b * c/d = a*c / b*d
 	public static Rational multiply(Rational r1, Rational r2) {
 		System.out.printf("(%d/%d) * (%d/%d) = ",r1.top,r1.bottom,r2.top,r2.bottom);
-		
 		return new Rational(r1.top*r2.top,r1.bottom*r2.bottom);
 	}
 	
 //	a/b ÷ c/d = a/b * d/c = a*d / b*c
 	public static Rational divide(Rational r1, Rational r2) {
 		System.out.printf("(%d/%d) / (%d/%d) = ",r1.top,r1.bottom,r2.top,r2.bottom);
-		
 		return new Rational(r1.top*r2.bottom,r1.bottom*r2.top);
 	}
 	
-//	NEED A COMMON DENOMINATOR
-//	DO THIS BY MULTIPLYING BOTH SIDES THE BOTTOM PART OF THE OTHER
-	
-//  if common denominator found then
-//    a/GCD + c/GCD = a+c/GCD
 	public static Rational plus(Rational r1, Rational r2) {
 		System.out.printf("(%d/%d) + (%d/%d) = ",r1.top,r1.bottom,r2.top,r2.bottom);
 		Rational a = new Rational(r1.top*r2.bottom,r1.bottom*r2.bottom);
 		Rational b = new Rational(r2.top*r1.bottom,r2.bottom*r1.bottom);
-	
 		return new Rational((a.top + b.top),b.bottom);
 	}
-//  if common denominator found then
-//  a/GCD - c/GCD = a- c/GCD
+
 	public static Rational minus(Rational r1, Rational r2) {
 		System.out.printf("(%d/%d) - (%d/%d) = ",r1.top,r1.bottom,r2.top,r2.bottom);
 		Rational a = new Rational(r1.top*r2.bottom,r1.bottom*r2.bottom);
 		Rational b = new Rational(r2.top*r1.bottom,r2.bottom*r1.bottom);
-		
 		return new Rational((a.top - b.top),b.bottom);
 	}
 	
