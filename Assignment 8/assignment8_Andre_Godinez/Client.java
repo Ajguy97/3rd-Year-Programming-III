@@ -28,7 +28,7 @@ public class Client extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	//Client variables
-	private final String serverAddress = "192.168.1.8";
+	private final String serverAddress = "192.168.7.117";
 	private static int PORT = 9001;
 	//client in/out streams that we init with serversocket handlers
 	public BufferedReader in;
@@ -42,7 +42,7 @@ public class Client extends JFrame{
 	private JTextArea messages;
 	private JLabel label;
 	private Icon icon = new ImageIcon(new ImageIcon ("image1.jpg").getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT));
-	private JRadioButton setting;
+	private JButton setting;
 	private JRadioButton image;
 	private JButton upload;
 	private Color bg_color = Color.BLACK;
@@ -81,7 +81,7 @@ public class Client extends JFrame{
 		inputsPanel1.add(Box.createRigidArea(new Dimension(10,10)));	
 		inputsPanel1.add(send);
 		
-		setting = new JRadioButton("Setting");
+		setting = new JButton("Setting");
 		image = new JRadioButton("Image");
 		upload = new JButton("Upload");
 		JPanel inputsPanel2 = new JPanel();
@@ -128,14 +128,14 @@ public class Client extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Random r = new Random();
-				Color color =new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256),r.nextInt(256));
+				Color color =new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256));
 				bg_color = color;
 				scrollableMessagePanel.setBackground(bg_color);
 				inputsPanel1.setBackground(bg_color);
 				inputsPanel2.setBackground(bg_color);
 				c.setBackground(bg_color);
 				
-				c.repaint();
+				//c.repaint();
 			}
 		});
 		
@@ -153,7 +153,7 @@ public class Client extends JFrame{
 					BufferedImage image = ImageIO.read(file);
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					ImageIO.write(image, "jpg", baos);
-					out.println("Uploading");
+					out.println("StoreImage");
 					outputStream.write(baos.toByteArray());
 					outputStream.flush();
 					
@@ -169,11 +169,26 @@ public class Client extends JFrame{
 			
 		});
 		
+		upload.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				out.println("Upload");
+			}
+			
+			
+		});
+		
 		
 		scrollableMessagePanel.setBackground(bg_color);
 		inputsPanel1.setBackground(bg_color);
 		inputsPanel2.setBackground(bg_color);
 		c.setBackground(bg_color);
+		
+		scrollableMessagePanel.setOpaque(false);
+		inputsPanel1.setOpaque(false);
+		inputsPanel2.setOpaque(false);
 		setSize(400,600);
 		pack();
 	}

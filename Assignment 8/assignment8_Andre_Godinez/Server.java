@@ -88,6 +88,7 @@ public class Server {
 		byte[] sizeArray = new byte[4];
 		byte[] imageArray;
 		int size;
+		BufferedImage image;
 		
 		//handler's run method
 		//Handler asks client for a suitable name ie. not already in static arraylist
@@ -103,8 +104,11 @@ public class Server {
 			in = new BufferedReader(new InputStreamReader
 					(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(),true);
+			
 			is = socket.getInputStream();
+			
 			while(true) {
+				
 				//writing to client that we're in submitting name stage
 				out.println("SubmitName");
 				name = in.readLine();
@@ -143,13 +147,21 @@ public class Server {
 				String input = in.readLine();
 				if(input != null) {
 					
-					if(input.startsWith("Uploading")){
+					if(input.startsWith("StoreImage")){
+	
 						imageArray = new byte[1200000];
 						is.read(imageArray);
-						BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageArray));
-						System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-						ImageIO.write(image, "jpg", new File(userdir+System.currentTimeMillis()+".jpg"));
-					}else {
+						image = ImageIO.read(new ByteArrayInputStream(imageArray));
+						
+					}
+					else if(input.startsWith("Upload")) {
+						
+							System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+							ImageIO.write(image, "jpg", new File(userdir+System.currentTimeMillis()+".jpg"));
+						
+					}
+					
+					else {
 						for(PrintWriter writer: writerList) {
 							writer.println("Message "+ name + ": " + input);
 						}
@@ -180,4 +192,3 @@ public class Server {
 	}
 		
 	}
-	
