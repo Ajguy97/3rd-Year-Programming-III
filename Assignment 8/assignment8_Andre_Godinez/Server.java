@@ -1,5 +1,7 @@
 package assignment8_Andre_Godinez;
 
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -10,16 +12,19 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 
-public class Server {
+
+public class Server extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//port the server listens on
 	private static int PORT = 9001;
 	//arraylist to store all names of clients 
@@ -32,15 +37,45 @@ public class Server {
 	//for uploading
 	private static String userdir = System.getProperty("user.dir");
 	
+	//for number of active windows
+	static int numWindows = 0;
 	
 	//GUI variables
-	JFrame frame = new JFrame("Server Window");
 	public static JTextArea messages = new JTextArea(8,60);
+	private JFrame frame;
 	
+
+	//main method
+	//listens on port and spawn handler threads
+	public static void main(String args[]) throws Exception{
+		Server s = new Server();
+		s.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		s.frame.setVisible(true);
+		s.frame.setSize(400,600);
+		s.runServer(PORT);
+	}
 	
-	public Server(){
+	public Server (){
+		super("Server Window");
+		frame = this;
+		Container c = getContentPane();
+		c.setLayout(new BoxLayout(c,BoxLayout.PAGE_AXIS));
+		
+		JPanel messagePane = new JPanel();
+		messagePane.setLayout(new BoxLayout(messagePane,BoxLayout.LINE_AXIS));
+		
+		messagePane.add(Box.createRigidArea(new Dimension(10,10)));
+		messagePane.add(messages);
+		messagePane.add(Box.createRigidArea(new Dimension(10,10)));
 		messages.setEditable(false);
-		frame.getContentPane().add(messages,"Center");
+		messages.setPreferredSize(new Dimension(400, 400));
+		
+		c.add(Box.createRigidArea(new Dimension(10,10)));
+		c.add(messagePane);
+		c.add(Box.createRigidArea(new Dimension(400,100)));
+		
+		messagePane.setBackground(Color.GRAY);
+		c.setBackground(Color.GRAY);
 		messages.append("Server Started. \n" );
 	}
 	
@@ -51,6 +86,8 @@ public class Server {
 		try {
 			while(true) {
 				new Handler(listener.accept()).start();
+				numWindows++;
+				System.out.println(numWindows);
 			}
 		}finally {
 			listener.close();
@@ -58,15 +95,6 @@ public class Server {
 		
 	}
 	
-	//main method
-	//listens on port and spawn handler threads
-	public static void main(String args[]) throws Exception{
-		Server s = new Server();
-		s.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		s.frame.setVisible(true);
-		s.frame.setSize(600,600);
-		s.runServer(PORT);
-	}
 	
 	
 	//handler thread class 
@@ -85,9 +113,9 @@ public class Server {
 			socket = s;
 		}
 		//image upload byte arrays
-		byte[] sizeArray = new byte[4];
+		
 		byte[] imageArray;
-		int size;
+		
 		BufferedImage image;
 		
 		//handler's run method
@@ -137,7 +165,7 @@ public class Server {
 			writerList.add(out);
 			String address = in.readLine();
 			if(address.startsWith("/")) {
-				messages.append(address + " \n");
+				messages.append(address + " has connected. \n");
 			}
 			
 			
@@ -148,17 +176,20 @@ public class Server {
 				if(input != null) {
 					
 					if(input.startsWith("StoreImage")){
-	
+						//store the image into variable but dont save into server yet
 						imageArray = new byte[1200000];
 						is.read(imageArray);
 						image = ImageIO.read(new ByteArrayInputStream(imageArray));
 						
 					}
 					else if(input.startsWith("Upload")) {
-						
-							System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+						//upload button pressed
+						//save image stored into server
+							messages.append("Received " + image.getHeight() + "x" + image.getWidth() + "\n");
 							ImageIO.write(image, "jpg", new File(userdir+System.currentTimeMillis()+".jpg"));
-						
+							
+							imageArray = null;
+							image = null;
 					}
 					
 					else {

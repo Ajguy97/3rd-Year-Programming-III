@@ -54,7 +54,7 @@ public class Client extends JFrame{
 	//
 	//client with GUI
 	public Client() throws Exception, IOException{
-		super("Chat Window");
+		super("Chat Window ");
 		frame = this;
 		Container c = getContentPane();
 		
@@ -110,7 +110,7 @@ public class Client extends JFrame{
 		inputField.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				out.println("message" + inputField.getText());
+				out.println(inputField.getText());
 				inputField.setText("");
 			}
 		});
@@ -194,11 +194,22 @@ public class Client extends JFrame{
 	}
 	
 	// method for joption pop up to enter name
-	private String getClientName() {
-		return JOptionPane.showInputDialog(frame,
-				"Enter Name: ",
-				"",
-				JOptionPane.PLAIN_MESSAGE);
+	private String getUsername() {
+		int selection =  JOptionPane.showConfirmDialog(frame,
+				"Enter as Anonymous?",
+				"Login Page",
+				JOptionPane.YES_NO_OPTION);
+		
+		if(selection == JOptionPane.YES_OPTION) {
+			Random r = new Random();
+			return "Anonymous"+ r.nextInt(1024);
+			
+		}else {
+			return JOptionPane.showInputDialog(frame,
+					"Enter name",
+					"",
+					JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 	
 	//run method
@@ -220,12 +231,14 @@ public class Client extends JFrame{
 	    while (true) {
             String line = in.readLine();
             if (line.startsWith("SubmitName")) {
-                out.println(getClientName());
-                messages.append("Welcome to the Chat Room >.> \n");
-                out.println("");
+                out.println(getUsername());
+                
+               //out.println("");
                 
             } else if (line.startsWith("FinishSubmitName")) {
                 inputField.setEditable(true);
+                messages.append("Welcome to the Chat Room >.> \n");
+                out.println("/"+serverAddress);
                 
             } else if (line.startsWith("Message")) {
                 messages.append(line.substring(8) + "\n");
