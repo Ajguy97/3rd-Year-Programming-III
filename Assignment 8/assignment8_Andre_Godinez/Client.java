@@ -2,24 +2,38 @@ package assignment8_Andre_Godinez;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 
+
+
 public class Client extends JFrame{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//Client variables
-	private final String serverAddress = "192.168.6.233";
+	private final String serverAddress = "192.168.1.8";
 	private static int PORT = 9001;
 	//client in/out streams that we init with serversocket handlers
 	public BufferedReader in;
 	public PrintWriter out;
+	public OutputStream outputStream;
 	
 	//GUI Variables
 	private JFrame frame;
@@ -31,49 +45,62 @@ public class Client extends JFrame{
 	private JRadioButton setting;
 	private JRadioButton image;
 	private JButton upload;
+	private Color bg_color = Color.BLACK;
+	//
+	
+	private Icon iconUpload;
 	
 	//constructor for client
 	//
 	//client with GUI
-	public Client() {
+	public Client() throws Exception, IOException{
 		super("Chat Window");
 		frame = this;
 		Container c = getContentPane();
 		
+		JPanel messagePanel = new JPanel();
 		messages = new JTextArea(30,30);
+		messagePanel.add(messages);
+	
+		JScrollPane scrollableMessagePanel = new JScrollPane(
+			    messagePanel,
+			    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+			    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollableMessagePanel.getViewport().setPreferredSize(new Dimension(300, 500));
+		scrollableMessagePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		
-		JPanel inputsPanel1 = new JPanel();
-		inputField = new JTextField(20);
-		send = new JButton("Send");
 		label = new JLabel(icon);
+		send = new JButton("Send");
+		inputField = new JTextField(20);
+		JPanel inputsPanel1 = new JPanel();
+		inputsPanel1.setLayout(new BoxLayout(inputsPanel1, BoxLayout.LINE_AXIS));
+		inputsPanel1.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		inputsPanel1.add(label);
+		inputsPanel1.add(Box.createRigidArea(new Dimension(10,10)));
 		inputsPanel1.add(inputField);
+		inputsPanel1.add(Box.createRigidArea(new Dimension(10,10)));	
 		inputsPanel1.add(send);
 		
-		
-		JPanel inputsPanel2 = new JPanel();
 		setting = new JRadioButton("Setting");
 		image = new JRadioButton("Image");
 		upload = new JButton("Upload");
+		JPanel inputsPanel2 = new JPanel();
+		inputsPanel2.setLayout(new BoxLayout(inputsPanel2, BoxLayout.LINE_AXIS));
+		inputsPanel2.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		inputsPanel2.add(setting);
+		inputsPanel1.add(Box.createRigidArea(new Dimension(10,10)));
 		inputsPanel2.add(image);
+		inputsPanel1.add(Box.createRigidArea(new Dimension(10,10)));
 		inputsPanel2.add(upload);
 		
 		
-		JPanel inputsPanel = new JPanel();
-		inputsPanel.setLayout(new BorderLayout());
-		inputsPanel.add(inputsPanel1,BorderLayout.NORTH);
-		inputsPanel.add(inputsPanel2,BorderLayout.SOUTH);
+		c.setLayout(new BoxLayout(c,BoxLayout.PAGE_AXIS));
+		c.add(scrollableMessagePanel);
+		c.add(inputsPanel1);
+		c.add(inputsPanel2);
 		
 		
-		JPanel temp = new JPanel();
-		temp.setLayout(new BorderLayout());
-		temp.add(messages,BorderLayout.CENTER);
-		temp.add(inputsPanel,BorderLayout.PAGE_END);
 		
-		temp.setBorder(new EmptyBorder(40, 40, 40, 40));
-		
-		c.add(temp);
 		//need to set editable flase until we enter correct name
 		messages.setEditable(false);
 		inputField.setEditable(false);
@@ -83,7 +110,7 @@ public class Client extends JFrame{
 		inputField.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				out.println(inputField.getText());
+				out.println("message" + inputField.getText());
 				inputField.setText("");
 			}
 		});
@@ -101,15 +128,54 @@ public class Client extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Random r = new Random();
-				Color c=new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256),r.nextInt(256));
-				temp.setBackground(c);
+				Color color =new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256),r.nextInt(256));
+				bg_color = color;
+				scrollableMessagePanel.setBackground(bg_color);
+				inputsPanel1.setBackground(bg_color);
+				inputsPanel2.setBackground(bg_color);
+				c.setBackground(bg_color);
+				
+				c.repaint();
+			}
+		});
+		
+		
+		image.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 JFileChooser chooser = new JFileChooser();
+				 chooser.showOpenDialog(null);
+				 File f = chooser.getSelectedFile();
+				 String filename = f.getAbsolutePath();
+				 try {
+					File file = new File(filename);
+					BufferedImage image = ImageIO.read(file);
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					ImageIO.write(image, "jpg", baos);
+					out.println("Uploading");
+					outputStream.write(baos.toByteArray());
+					outputStream.flush();
+					
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
 			}
 			
 			
 		});
 		
+		
+		scrollableMessagePanel.setBackground(bg_color);
+		inputsPanel1.setBackground(bg_color);
+		inputsPanel2.setBackground(bg_color);
+		c.setBackground(bg_color);
 		setSize(400,600);
-		//pack();
+		pack();
 	}
 	
 	// method for joption pop up to enter name
@@ -131,6 +197,9 @@ public class Client extends JFrame{
 	    in = new BufferedReader(new InputStreamReader(
 	    socket.getInputStream()));
 	    out = new PrintWriter(socket.getOutputStream(), true);
+	    
+	    //for outputting image byte buffer
+	    outputStream = socket.getOutputStream();
 	    
 	    //adding and reading messages to/from the server with message types
 	    while (true) {

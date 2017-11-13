@@ -1,19 +1,25 @@
 package assignment8_Andre_Godinez;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 
 public class Server {
-
+	
 	//port the server listens on
 	private static int PORT = 9001;
 	//arraylist to store all names of clients 
@@ -22,6 +28,10 @@ public class Server {
 	private static ArrayList<String> nameList = new ArrayList<String>();
 	//array of printwriters per client
 	private static ArrayList<PrintWriter> writerList = new ArrayList<PrintWriter>();
+	
+	//for uploading
+	private static String userdir = System.getProperty("user.dir");
+	
 	
 	//GUI variables
 	JFrame frame = new JFrame("Server Window");
@@ -74,6 +84,10 @@ public class Server {
 		public Handler(Socket s) {
 			socket = s;
 		}
+		//image upload byte arrays
+		byte[] sizeArray = new byte[4];
+		byte[] imageArray;
+		int size;
 		
 		//handler's run method
 		//Handler asks client for a suitable name ie. not already in static arraylist
@@ -82,13 +96,14 @@ public class Server {
 		//keep accepting messages from client and broadcast them to the server
 		
 	public void run() {
+		InputStream is = null;
 		try {
 			//reading and writing to a socket
 			//we get new input and output streams for this client
 			in = new BufferedReader(new InputStreamReader
 					(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(),true);
-			
+			is = socket.getInputStream();
 			while(true) {
 				//writing to client that we're in submitting name stage
 				out.println("SubmitName");
@@ -124,14 +139,24 @@ public class Server {
 			
 			//while loop for adding messages and broadcasting them
 			while(true) {
-				
-				
+			
 				String input = in.readLine();
 				if(input != null) {
-					for(PrintWriter writer: writerList) {
-						writer.println("Message "+ name + ": " + input);
+					
+					if(input.startsWith("Uploading")){
+						imageArray = new byte[1200000];
+						is.read(imageArray);
+						BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageArray));
+						System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+						ImageIO.write(image, "jpg", new File(userdir+System.currentTimeMillis()+".jpg"));
+					}else {
+						for(PrintWriter writer: writerList) {
+							writer.println("Message "+ name + ": " + input);
+						}
 					}
-				}else {
+				}
+				
+				else {
 					return;
 				}
 			}
@@ -156,4 +181,3 @@ public class Server {
 		
 	}
 	
-
