@@ -77,6 +77,7 @@ public class Server extends JFrame {
 		messagePane.setBackground(Color.GRAY);
 		c.setBackground(Color.GRAY);
 		messages.append("Server Started. \n" );
+		setSize(400,600);
 	}
 	
 	public void runServer(int port) throws Exception {
@@ -107,15 +108,14 @@ public class Server extends JFrame {
 		private Socket socket;
 		private BufferedReader in;
 		private PrintWriter out;
-		private InputStream is;
+		
 		//constructor 
 		public Handler(Socket s) {
 			socket = s;
 		}
 		//image upload byte arrays
-		
+		private InputStream is;
 		byte[] imageArray;
-		
 		BufferedImage image;
 		
 		//handler's run method
@@ -177,7 +177,8 @@ public class Server extends JFrame {
 					
 					if(input.startsWith("StoreImage")){
 						//store the image into variable but dont save into server yet
-						imageArray = new byte[1200000];
+						imageArray = new byte[50000000]; //max image 50 megabytes for this server 
+														//or else bytes are going to be read with 
 						is.read(imageArray);
 						image = ImageIO.read(new ByteArrayInputStream(imageArray));
 						
@@ -188,6 +189,7 @@ public class Server extends JFrame {
 							messages.append("Received " + image.getHeight() + "x" + image.getWidth() + "\n");
 							ImageIO.write(image, "jpg", new File("image"+System.currentTimeMillis()+".jpg"));
 							
+							//Setting imageArray and image as null so we can upload new images
 							imageArray = null;
 							image = null;
 					}

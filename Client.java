@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Random;
@@ -28,7 +29,7 @@ public class Client extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	//Client variables
-	private final String serverAddress = "140.203.215.70";
+	private final InetAddress serverAddress;
 	private static int PORT = 9001;
 	//client in/out streams that we init with serversocket handlers
 	public BufferedReader in;
@@ -57,6 +58,7 @@ public class Client extends JFrame{
 		super("Chat Window ");
 		frame = this;
 		Container c = getContentPane();
+		serverAddress = InetAddress.getLocalHost();
 		
 		JPanel messagePanel = new JPanel();
 		messages = new JTextArea(30,30);
@@ -144,17 +146,24 @@ public class Client extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//used Jfilechooser to choosefile because it has built in GUI
 				 JFileChooser chooser = new JFileChooser();
 				 chooser.showOpenDialog(null);
 				 File f = chooser.getSelectedFile();
 				 String filename = f.getAbsolutePath();
 				 try {
 					File file = new File(filename);
+					//Make an image from the new file
 					BufferedImage image = ImageIO.read(file);
+					//store the image on a bytearrayoutputstream
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					ImageIO.write(image, "jpg", baos);
+					
+					//send storeimage string to tell the server client is storing an image
 					out.println("StoreImage");
+					//send the image as a bytearray over to the socket
 					outputStream.write(baos.toByteArray());
+					//make sure all bytes are sent
 					outputStream.flush();
 					
 					
@@ -173,7 +182,8 @@ public class Client extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				//only save the image to the server once the client pressed
+				//upload button
 				out.println("Upload");
 			}
 			
@@ -211,7 +221,7 @@ public class Client extends JFrame{
 			return JOptionPane.showInputDialog(frame,
 					"Enter name",
 					"",
-					JOptionPane.QUESTION_MESSAGE);
+					JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 	
