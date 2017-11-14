@@ -107,7 +107,7 @@ public class Server extends JFrame {
 		private Socket socket;
 		private BufferedReader in;
 		private PrintWriter out;
-		
+		private InputStream is;
 		//constructor 
 		public Handler(Socket s) {
 			socket = s;
@@ -125,7 +125,7 @@ public class Server extends JFrame {
 		//keep accepting messages from client and broadcast them to the server
 		
 	public void run() {
-		InputStream is = null;
+		is = null;
 		try {
 			//reading and writing to a socket
 			//we get new input and output streams for this client
@@ -186,7 +186,7 @@ public class Server extends JFrame {
 						//upload button pressed
 						//save image stored into server
 							messages.append("Received " + image.getHeight() + "x" + image.getWidth() + "\n");
-							ImageIO.write(image, "jpg", new File(userdir+System.currentTimeMillis()+".jpg"));
+							ImageIO.write(image, "jpg", new File("image"+System.currentTimeMillis()+".jpg"));
 							
 							imageArray = null;
 							image = null;

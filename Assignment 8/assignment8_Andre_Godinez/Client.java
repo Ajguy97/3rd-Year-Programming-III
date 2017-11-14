@@ -28,7 +28,7 @@ public class Client extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	//Client variables
-	private final String serverAddress = "192.168.7.117";
+	private final String serverAddress = "140.203.243.52";
 	private static int PORT = 9001;
 	//client in/out streams that we init with serversocket handlers
 	public BufferedReader in;
@@ -180,6 +180,9 @@ public class Client extends JFrame{
 			
 		});
 		
+		Random r = new Random();
+		Color color =new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256));
+		bg_color = color;
 		
 		scrollableMessagePanel.setBackground(bg_color);
 		inputsPanel1.setBackground(bg_color);
